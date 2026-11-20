@@ -1,0 +1,111 @@
+==========================================================================
+TUGAS DATA PREPROCESSING - MATA KULIAH PENAMBANGAN DATA
+==========================================================================
+Nama Pembuat Kasus : Erma Oktavia Ramadhani
+NIM Pembuat Kasus  : 3022410030
+
+Nama Pengerja      : Shifa Rosdiana
+NIM Pengerja       : 3022410033
+==========================================================================
+
+DESKRIPSI KASUS: PREDIKSI KESELAMATAN PENUMPANG KAPAL TITANIC
+--------------------------------------------------------------------------
+Dataset : data_titanic_kotor.csv
+Jumlah  : 208 baris, 15 variabel (numerik dan kategorik)
+Sumber  : Titanic - Machine Learning from Disaster (Kaggle, file train.csv).
+          Data asli diambil sebanyak 200 baris secara acak, ditambah beberapa
+          variabel (Fare_Rupiah, ID_Internal, Kapal) dan dimanipulasi untuk
+          keperluan praktikum.
+
+LATAR BELAKANG
+Sebuah tim peneliti sejarah maritim ingin mengetahui faktor-faktor yang
+memengaruhi keselamatan penumpang kapal Titanic agar dapat dibuat model yang
+memprediksi apakah seorang penumpang selamat atau tidak. Data dikumpulkan dari
+arsip manifest penumpang oleh beberapa petugas dengan cara pencatatan yang
+berbeda-beda, sehingga kualitas dan keseragaman datanya belum terjamin. Anda
+berperan sebagai data scientist yang harus menyiapkan data ini sebelum dipakai
+untuk membangun model klasifikasi Survived (1 = selamat, 0 = tidak selamat).
+
+DESKRIPSI VARIABEL
+PassengerId : nomor unik penumpang
+Survived    : status keselamatan (0 = tidak selamat, 1 = selamat)
+Pclass      : kelas tiket (1 = kelas satu, 2 = kelas dua, 3 = kelas tiga)
+Name        : nama lengkap penumpang beserta gelar
+Sex         : jenis kelamin (male / female)
+Age         : usia penumpang (tahun)
+SibSp       : jumlah saudara kandung / pasangan yang ikut berlayar
+Parch       : jumlah orang tua / anak yang ikut berlayar
+Ticket      : nomor tiket
+Fare        : tarif tiket (poundsterling)
+Cabin       : nomor kabin
+Embarked    : pelabuhan keberangkatan (C = Cherbourg, Q = Queenstown,
+              S = Southampton)
+Fare_Rupiah : tarif tiket dalam Rupiah (kurs 1 poundsterling = Rp15.000)
+ID_Internal : kode internal pencatatan petugas
+Kapal       : nama kapal
+
+ATURAN VALIDASI DATA (dari tim peneliti)
+- Usia penumpang yang valid: 0 - 80 tahun.
+- Fare valid pada rentang 0 - 520 poundsterling.
+- SibSp valid 0 - 8 dan Parch valid 0 - 6.
+- Pclass hanya boleh berisi bilangan bulat 1, 2, atau 3.
+- Sex hanya boleh berisi male atau female; Embarked hanya boleh berisi
+  C, Q, atau S; Survived hanya boleh berisi 0 atau 1.
+- Kolom Name harus berformat "Nama Belakang, Gelar. Nama Depan".
+- Setiap penumpang hanya tercatat satu kali (PassengerId tidak boleh ganda).
+
+TUGAS (5 TAHAP)
+Kerjakan dengan Python (Jupyter Notebook) dan jelaskan setiap tahap dalam format
+INPUT - PROSES - OUTPUT. Jenis dan jumlah masalah pada data TIDAK diberitahukan;
+Anda harus menemukannya sendiri.
+
+1. DETEKSI MASALAH DATA
+   Buat profil data (dimensi, tipe data, statistik deskriptif, nilai unik tiap
+   kolom kategorik). Temukan dan dokumentasikan semua masalah yang ada, meliputi
+   penulisan kategori yang tidak seragam, spasi berlebih, data ganda, nilai yang
+   melanggar aturan validasi (termasuk outlier), kolom dengan tipe data yang
+   salah, dan kolom yang tidak berguna untuk pemodelan. Sajikan dalam tabel:
+   kolom, jenis masalah, jumlah baris terdampak, dan bukti
+   (kode/histogram/boxplot).
+
+2. PEMBERSIHAN DATA
+   Tangani seluruh masalah dari tahap 1: seragamkan label dan huruf besar/kecil,
+   hapus spasi berlebih (depan, belakang, dan ganda di tengah), hapus data
+   ganda, perbaiki tipe data dan format yang salah, ubah nilai yang melanggar
+   aturan validasi, serta seragamkan satuan Fare. Tampilkan data sebelum dan
+   sesudah tiap perbaikan.
+
+3. PENANGANAN MISSING VALUE
+   Hitung jumlah missing value per kolom dan visualisasikan polanya (missingno).
+   Gunakan statistik deskriptif (mean, median, modus, distribusi) untuk menentukan
+   metode tiap kolom. Bandingkan minimal TIGA strategi (hapus baris, hapus kolom,
+   isi nilai 0 / mean / median / modus) dan jelaskan dampaknya pada data. Tetapkan
+   strategi final tiap kolom beserta alasannya.
+
+   [TANTANGAN - di luar materi praktikum]
+   Pada kolom Age, isi missing value berdasarkan kelompok Pclass dan Sex (bukan
+   rata-rata keseluruhan). Jelaskan mengapa cara ini lebih tepat dan bandingkan
+   hasilnya dengan pengisian rata-rata atau median biasa.
+
+4. TRANSFORMASI DATA
+   - Normalisasi variabel numerik (Age, Fare, SibSp, Parch) dengan Min-Max,
+     Z-score, dan Robust Scaler; bandingkan hasilnya.
+   - Label encoding untuk variabel ordinal (Pclass) dan Survived, serta encoding
+     yang sesuai untuk variabel kategorik lain (Sex, Embarked).
+   - Diskretisasi variabel Age dengan equal width (pd.cut) dan equal frequency
+     (pd.qcut); bandingkan sebaran tiap kategori.
+   - Rekayasa fitur: ambil gelar (Mr, Mrs, Miss, dll.) dari kolom Name, buat
+     fitur FamilySize dari SibSp dan Parch, dan ubah Cabin menjadi fitur
+     sederhana (misalnya ada/tidaknya kabin atau huruf dek).
+   - Agregasi: hitung rata-rata variabel numerik per Pclass.
+   - Smoothing: terapkan moving average pada satu variabel (misalnya Fare yang
+     diurutkan berdasarkan PassengerId).
+
+5. REDUKSI DATA
+   Hitung korelasi antar variabel numerik dan identifikasi variabel yang redundan.
+   Standardisasi variabel numerik lalu terapkan PCA: tampilkan grafik explained
+   variance, tentukan jumlah komponen yang dipertahankan beserta alasan, dan
+   interpretasikan komponen utamanya (misalnya dari nilai loading). Tutup dengan
+   tabel perbandingan data sebelum dan sesudah preprocessing (jumlah baris, kolom,
+   dan missing value).
+
